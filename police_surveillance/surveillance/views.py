@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from .models import VideoUpload, AIAnalysis
+from .serializers import VideoUploadSerializer, AIAnalysisSerializer
 
-# Create your views here.
+class VideoUploadViewSet(viewsets.ModelViewSet):
+    queryset = VideoUpload.objects.all()
+    serializer_class = VideoUploadSerializer
+
+class AIAnalysisViewSet(viewsets.ModelViewSet):
+    queryset = AIAnalysis.objects.all()
+    serializer_class = AIAnalysisSerializer
