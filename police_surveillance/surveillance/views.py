@@ -1,36 +1,36 @@
+from rest_framework.views import APIView
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from .models import VideoUpload, AIAnalysis
 from .serializers import VideoUploadSerializer, AIAnalysisSerializer
-from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import Video
+from .serializers import VideoSerializer
 
 
 class VideoUploadViewSet(viewsets.ModelViewSet):
     queryset = VideoUpload.objects.all()
     serializer_class = VideoUploadSerializer
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
 
 class AIAnalysisViewSet(viewsets.ModelViewSet):
     queryset = AIAnalysis.objects.all()
     serializer_class = AIAnalysisSerializer
-
+    permission_classes = [IsAuthenticated]
 
 class VideoUploadView(APIView):
-    permission_classes = [IsAuthenticated]  # Ensure the user is authenticated with JWT
-    parser_classes = [MultiPartParser, FormParser]  # Support file uploads
+    parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request, *args, **kwargs):
-        data = {
-            'user': request.user.id,
-            'video_file': request.FILES.get('video_file'),
-            'gps_latitude': request.data.get('gps_latitude'),
-            'gps_longitude': request.data.get('gps_longitude'),
-        }
-        serializer = VideoUploadSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        video_serializer = VideoSerializer(data=request.data)
+        if video_serializer.is_valid():
+            video_serializer.save()
+            return Response(video_serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(video_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
