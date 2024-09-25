@@ -25,7 +25,8 @@ SECRET_KEY = "django-insecure-=jqi@p1zy(=%1jiwsjehf%%gi+hep2fv@n$xy410(glv7660dg
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']  # Replace with your local IP
+
 
 
 # Application definition
@@ -40,6 +41,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'channels',
     'surveillance',
+    "corsheaders",
+    'rest_framework_simplejwt',
+    
 ]
 
 REST_FRAMEWORK = {
@@ -57,6 +61,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    
 ]
 
 ROOT_URLCONF = "police_surveillance.urls"
@@ -90,6 +96,16 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
+CORS_ALLOW_ALL_ORIGINS = True  # Allow all origins
+CORS_ALLOW_CREDENTIALS = True   # If you need credentials
+CORS_DEBUG = True               # Enable CORS debugging
+
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    'http://127.0.0.1:8000',
+    "http://192.168.1.1:3000",  # Your Flutter web app URL
+]
 
 
 # Password validation
